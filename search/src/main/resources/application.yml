@@ -1,0 +1,4 @@
+api:
+  kakaobank:
+    api-key: a77d0a1e2de3b7d8365b27f71ff809af
+    url: https://dapi.kakao.com/v2/search/
