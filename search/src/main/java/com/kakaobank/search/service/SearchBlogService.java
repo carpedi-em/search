@@ -17,13 +17,14 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class SearchService {
+public class SearchBlogService {
     @Value("${api.kakaobank.url}")
     String url;
 
     @Value("${api.kakaobank.api-key}")
     String API_KEY;
     private final RestTemplate restTemplate;
+    private final SearchPopularService searchPopularService;
 
     public Page<SearchBlogDocumentsResponseDto> searchBlog(SearchDto searchDto) {
         final String BLOG_PATH = "blog";
@@ -54,6 +55,8 @@ public class SearchService {
         Page<SearchBlogDocumentsResponseDto> response =
                 new PageImpl<>(searchBlogResponseDtoBody.getDocuments(),
                         pageable , searchBlogResponseDtoBody.getMeta().getTotalCount());
+
+        searchPopularService.searchHit(searchDto.getQuery());
 
         return response;
     }
