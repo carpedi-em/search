@@ -1,7 +1,7 @@
 spring:
   datasource:
     hikari:
-      jdbc-url: jdbc:h2:file:./h2db/kakaobank
+      url: jdbc:h2:tcp://localhost/~/kakaobank
       driver-class-name: org.h2.Driver
       username: sa
   h2:
@@ -9,6 +9,7 @@ spring:
       path: /h2console
       enabled: true
   jpa:
+    database: h2
     hibernate:
       ddl-auto: update
     show-sql: true
