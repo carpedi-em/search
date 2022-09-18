@@ -1,7 +1,7 @@
 package com.kakaobank.search.service;
 
 import com.kakaobank.search.config.CachingConfig;
-import com.kakaobank.search.dto.response.SearchPopularResponseDto;
+import com.kakaobank.search.dto.SearchPopularDto;
 import com.kakaobank.search.entity.SearchPopular;
 import com.kakaobank.search.repository.SearchPopularRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +21,10 @@ public class SearchPopularService {
 
     @Transactional(readOnly = true)
     @Cacheable(value = CachingConfig.POPULAR)
-    public List<SearchPopularResponseDto> searchPopular() {
+    public List<SearchPopularDto> searchPopular() {
         return searchPopularRepository.findTop10ByOrderByHitDesc()
                 .stream()
-                .map(SearchPopularResponseDto::new)
+                .map(SearchPopularDto::new)
                 .collect(toList());
     }
 

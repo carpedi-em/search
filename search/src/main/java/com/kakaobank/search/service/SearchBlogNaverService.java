@@ -1,6 +1,6 @@
 package com.kakaobank.search.service;
 
-import com.kakaobank.search.dto.SearchDto;
+import com.kakaobank.search.dto.request.SearchRequestDto;
 import com.kakaobank.search.dto.response.naver.SearchBlogNaverResponseDto;
 import com.kakaobank.search.util.URLUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ public class SearchBlogNaverService {
     private final RestTemplate restTemplate;
     private final SearchPopularService searchPopularService;
 
-    public SearchBlogNaverResponseDto searchBlog(SearchDto searchDto) {
-        String searchBlogURL = getUrl(searchDto);
+    public SearchBlogNaverResponseDto searchBlog(SearchRequestDto searchRequestDto) {
+        String searchBlogURL = getUrl(searchRequestDto);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -41,19 +41,19 @@ public class SearchBlogNaverService {
 
         SearchBlogNaverResponseDto searchBlogResponseDtoBody = searchBlogResponseDtoResponseEntity.getBody();
 
-        searchPopularService.searchHit(searchDto.getQuery());
+        searchPopularService.searchHit(searchRequestDto.getQuery());
 
         return searchBlogResponseDtoBody;
     }
 
-    private String getUrl(SearchDto searchDto) {
+    private String getUrl(SearchRequestDto searchRequestDto) {
         final String BLOG_PATH = "blog.json";
 
-        String searchBlogURL = url + BLOG_PATH + "?query=" + URLUtil.encodeUTF8(searchDto.getQuery());
+        String searchBlogURL = url + BLOG_PATH + "?query=" + URLUtil.encodeUTF8(searchRequestDto.getQuery());
 
-        URLUtil.urlSettingParameter(url, "sort", searchDto.getSort());
-        URLUtil.urlSettingParameter(url, "start", searchDto.getPage());
-        URLUtil.urlSettingParameter(url, "display", searchDto.getSize());
+        URLUtil.urlSettingParameter(url, "sort", searchRequestDto.getSort());
+        URLUtil.urlSettingParameter(url, "start", searchRequestDto.getPage());
+        URLUtil.urlSettingParameter(url, "display", searchRequestDto.getSize());
 
         return searchBlogURL;
     }

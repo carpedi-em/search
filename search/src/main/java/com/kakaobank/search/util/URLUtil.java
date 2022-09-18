@@ -17,7 +17,7 @@ public class URLUtil {
     }
 
     public static String urlSettingParameter(String url, String key , Object value) {
-        if (Objects.isNull(value)) {
+        if (Objects.isNull(key) || Objects.isNull(value)) {
             return url;
         }
 

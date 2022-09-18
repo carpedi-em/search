@@ -1,7 +1,9 @@
 package com.kakaobank.search.dto.response;
 
-import com.kakaobank.search.entity.SearchPopular;
+import com.kakaobank.search.dto.SearchPopularDto;
 import lombok.*;
+
+import java.util.List;
 
 @ToString
 @Getter
@@ -10,11 +12,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class SearchPopularResponseDto {
-    private String id;
-    private int hit;
+    private List<SearchPopularDto> popular;
 
-    public SearchPopularResponseDto(SearchPopular searchPopular) {
-        this.id = searchPopular.getId();
-        this.hit = searchPopular.getHit();
+    public static SearchPopularResponseDto of(List<SearchPopularDto> searchPopularDto) {
+        return SearchPopularResponseDto.builder().popular(searchPopularDto).build();
     }
 }

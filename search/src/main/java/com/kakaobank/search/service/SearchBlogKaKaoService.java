@@ -1,6 +1,6 @@
 package com.kakaobank.search.service;
 
-import com.kakaobank.search.dto.SearchDto;
+import com.kakaobank.search.dto.request.SearchRequestDto;
 import com.kakaobank.search.dto.response.SearchBlogDocumentsResponseDto;
 import com.kakaobank.search.dto.response.SearchBlogResponseDto;
 import com.kakaobank.search.dto.response.naver.SearchBlogNaverResponseDto;
@@ -33,29 +33,29 @@ public class SearchBlogKaKaoService {
     private final SearchPopularService searchPopularService;
     private final SearchBlogNaverService searchBlogNaverService;
 
-    public Page<SearchBlogDocumentsResponseDto> searchBlog(SearchDto searchDto) {
+    public Page<SearchBlogDocumentsResponseDto> searchBlog(SearchRequestDto searchRequestDto) {
 
         try {
-            String searchBlogURL = getUrl(searchDto);
+            String searchBlogURL = getUrl(searchRequestDto);
             HttpEntity<Void> requestEntity = getHeader();
 
             ResponseEntity<SearchBlogResponseDto> searchBlogResponseDtoResponseEntity =
                     restTemplate.exchange(searchBlogURL, HttpMethod.GET, requestEntity, SearchBlogResponseDto.class);
             SearchBlogResponseDto searchBlogResponseDto = searchBlogResponseDtoResponseEntity.getBody();
 
-            Pageable pageable = PageRequest.of(searchDto.getPage(), searchDto.getSize());
+            Pageable pageable = PageRequest.of(searchRequestDto.getPage(), searchRequestDto.getSize());
 
             Page<SearchBlogDocumentsResponseDto> responseSearchBlog =
                     new PageImpl<>(searchBlogResponseDto.getDocuments(),
                             pageable, searchBlogResponseDto.getMeta().getTotalCount());
 
-            searchPopularService.searchHit(searchDto.getQuery());
+            searchPopularService.searchHit(searchRequestDto.getQuery());
 
             return responseSearchBlog;
         } catch (Exception e) {
-            SearchBlogNaverResponseDto searchBlogNaverResponseDto = searchBlogNaverService.searchBlog(searchDto);
+            SearchBlogNaverResponseDto searchBlogNaverResponseDto = searchBlogNaverService.searchBlog(searchRequestDto);
 
-            Pageable pageable = PageRequest.of(searchDto.getPage(), searchDto.getSize());
+            Pageable pageable = PageRequest.of(searchRequestDto.getPage(), searchRequestDto.getSize());
 
             List<SearchBlogDocumentsResponseDto> searchBlogDocumentsResponseDto = searchBlogNaverResponseDto
                     .getItems()
@@ -77,13 +77,13 @@ public class SearchBlogKaKaoService {
         return new HttpEntity<>(httpHeaders);
     }
 
-    private String getUrl(SearchDto searchDto) {
+    private String getUrl(SearchRequestDto searchRequestDto) {
         final String BLOG_PATH = "blog";
-        String searchBlogURL = url + BLOG_PATH + "?query=" + searchDto.getQuery();
+        String searchBlogURL = url + BLOG_PATH + "?query=" + URLUtil.encodeUTF8(searchRequestDto.getQuery());
 
-        URLUtil.urlSettingParameter(url, "sort", searchDto.getSort());
-        URLUtil.urlSettingParameter(url, "page", searchDto.getPage());
-        URLUtil.urlSettingParameter(url, "size", searchDto.getSize());
+        URLUtil.urlSettingParameter(url, "sort", searchRequestDto.getSort());
+        URLUtil.urlSettingParameter(url, "page", searchRequestDto.getPage());
+        URLUtil.urlSettingParameter(url, "size", searchRequestDto.getSize());
         return searchBlogURL;
     }
 }

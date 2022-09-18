@@ -1,4 +1,4 @@
-package com.kakaobank.search.dto;
+package com.kakaobank.search.dto.request;
 
 import com.kakaobank.search.enumeration.SearchSort;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Setter
 @ToString
-public class SearchDto {
+public class SearchRequestDto {
     @NotEmpty
     private String query;
     private SearchSort sort;

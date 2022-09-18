@@ -1,6 +1,6 @@
 package com.kakaobank.search.controller.v2;
 
-import com.kakaobank.search.dto.SearchDto;
+import com.kakaobank.search.dto.request.SearchRequestDto;
 import com.kakaobank.search.dto.response.SearchBlogDocumentsResponseDto;
 import com.kakaobank.search.service.SearchBlogKaKaoService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class SearchBlogController extends SearchV2Controller {
     private final SearchBlogKaKaoService searchBlogKaKaoService;
 
     @GetMapping("/blog")
-    public Page<SearchBlogDocumentsResponseDto> searchBlog(@Valid SearchDto searchDto) {
-        return searchBlogKaKaoService.searchBlog(searchDto);
+    public Page<SearchBlogDocumentsResponseDto> searchBlog(@Valid SearchRequestDto searchRequestDto) {
+        return searchBlogKaKaoService.searchBlog(searchRequestDto);
     }
 }
