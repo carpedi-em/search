@@ -28,12 +28,11 @@ public class SearchPopularService {
                 .collect(toList());
     }
 
-    public void searchHit(String query) {
+    public SearchPopular searchHit(String query) {
         SearchPopular searchPopular = searchPopularRepository.findById(query).orElse(SearchPopular.EMPTY);
         if (searchPopular.isEmpty()) {
-            searchPopularRepository.save(SearchPopular.builder().id(query).build());
-            return;
+            return searchPopularRepository.save(SearchPopular.builder().id(query).build());
         }
-        searchPopularRepository.save(searchPopular.updateHit());
+        return searchPopularRepository.save(searchPopular.updateHit());
     }
 }
