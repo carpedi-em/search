@@ -1,13 +1,9 @@
 # Jar File Link
 
----
-
 []()
 
 
 # Environment
-
----
 
 - Post : 8080
 - Java Version : 11
@@ -17,8 +13,6 @@
 
 # API
 
----
-
 ## 블로그 검색 API
 
 ### path
@@ -27,7 +21,7 @@ GET /v2/search/blog
 ```
 
 ### Request 
-```http
+```
 curl -v -X GET "http://localhost:8080/v2/search/blog" \
 --data-urlencode "query=카카오뱅크" \
 ```
@@ -48,20 +42,16 @@ GET /v2/search/popular
 ```
 
 ### Request
-```http
+```
 curl -v -X GET "http://localhost:8080/v2/search/popular"
 ```
 
 # 기능
-
----
 
 1. 블로그 검색
 2. 인기 검색어 목록
 3. API 장애시 외부 API 사용
 
 # 외부 라이브러리
-
----
 
 - [lombok](https://github.com/projectlombok/lombok)
