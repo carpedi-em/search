@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -56,5 +57,26 @@ class SearchBlogNaverServiceTest {
         assertEquals(searchBlogNaverResponseDto.getItems().size(), 1);
         assertEquals(searchBlogNaverResponseDto, searchBlogNaverResponseDtoBody);
         verify(searchPopularService, times(1)).searchHit(QUERY);
+    }
+
+    @Test
+    @DisplayName("Naver API 실패")
+    void searchBlog_NAVER_API_실패() {
+        final String QUERY = "카카오뱅크";
+        SearchRequestDto searchRequestDto = new SearchRequestDto();
+        searchRequestDto.setQuery(QUERY);
+
+        when(restTemplate.exchange(
+                anyString(),
+                any(HttpMethod.class),
+                any(HttpEntity.class),
+                ArgumentMatchers.<Class<SearchBlogNaverResponseDto>>any())
+        ).thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+
+        assertThrows(RuntimeException.class, () -> {
+            searchBlogNaverService.searchBlog(searchRequestDto);
+        });
+
+        verify(searchPopularService, times(0)).searchHit(QUERY);
     }
 }

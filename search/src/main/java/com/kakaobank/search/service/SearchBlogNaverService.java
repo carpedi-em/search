@@ -38,12 +38,19 @@ public class SearchBlogNaverService {
 
         ResponseEntity<SearchBlogNaverResponseDto> searchBlogResponseDtoResponseEntity =
                 restTemplate.exchange(searchBlogURL, HttpMethod.GET, requestEntity, SearchBlogNaverResponseDto.class);
+        if (isNotSuccess(searchBlogResponseDtoResponseEntity.getStatusCode())) {
+            throw new RuntimeException("naver api error");
+        }
 
         SearchBlogNaverResponseDto searchBlogResponseDtoBody = searchBlogResponseDtoResponseEntity.getBody();
 
         searchPopularService.searchHit(searchRequestDto.getQuery());
 
         return searchBlogResponseDtoBody;
+    }
+
+    private boolean isNotSuccess(HttpStatus statusCode) {
+        return !statusCode.is2xxSuccessful();
     }
 
     private String getUrl(SearchRequestDto searchRequestDto) {

@@ -25,9 +25,6 @@ class SearchApiTest {
     void searchBlog() throws Exception {
         MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
         parameter.add("query", "kakaobank");
-        parameter.add("sort", "recency");
-        parameter.add("page", "2");
-        parameter.add("size", "5");
 
         mvc.perform(MockMvcRequestBuilders
                         .get("/v2/search/blog")
@@ -42,7 +39,7 @@ class SearchApiTest {
     void search_정확도순_정렬() throws Exception {
         MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
         parameter.add("query", "kakaobank");
-        parameter.add("sort", "recency");
+        parameter.add("sort", "accuracy");
         parameter.add("page", "3");
         parameter.add("size", "2");
 
