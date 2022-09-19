@@ -29,7 +29,8 @@ class SearchBlogControllerTest {
     @Test
     @DisplayName("블로그 검색 Controller Test")
     void searchBlog() {
-        SearchRequestDto searchRequestDto = SearchRequestDto.builder().query("카카오뱅크").build();
+        SearchRequestDto searchRequestDto = new SearchRequestDto();
+        searchRequestDto.setQuery("카카오뱅크");
         Pageable pageable = PageRequest.of(searchRequestDto.getPage(), searchRequestDto.getSize());
         Page<SearchBlogDocumentsResponseDto> responseSearchBlog = new PageImpl<>(asList(), pageable, 1);
 

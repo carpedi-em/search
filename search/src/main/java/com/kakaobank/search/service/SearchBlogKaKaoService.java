@@ -6,6 +6,7 @@ import com.kakaobank.search.dto.response.SearchBlogResponseDto;
 import com.kakaobank.search.dto.response.naver.SearchBlogNaverResponseDto;
 import com.kakaobank.search.util.URLUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,6 +24,7 @@ import static java.util.stream.Collectors.toList;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SearchBlogKaKaoService {
     @Value("${api.kakaobank.url}")
     String url;
@@ -39,8 +41,11 @@ public class SearchBlogKaKaoService {
             String searchBlogURL = getUrl(searchRequestDto);
             HttpEntity<Void> requestEntity = getHeader();
 
-            ResponseEntity<SearchBlogResponseDto> searchBlogResponseDtoResponseEntity =
-                    restTemplate.exchange(searchBlogURL, HttpMethod.GET, requestEntity, SearchBlogResponseDto.class);
+            ResponseEntity<SearchBlogResponseDto> searchBlogResponseDtoResponseEntity = restTemplate.exchange(searchBlogURL, HttpMethod.GET, requestEntity, SearchBlogResponseDto.class);
+            if (isNotSuccess(searchBlogResponseDtoResponseEntity.getStatusCode())) {
+                throw new RuntimeException("kakao api error");
+            }
+
             SearchBlogResponseDto searchBlogResponseDto = searchBlogResponseDtoResponseEntity.getBody();
 
             Pageable pageable = PageRequest.of(searchRequestDto.getPage(), searchRequestDto.getSize());
@@ -53,6 +58,8 @@ public class SearchBlogKaKaoService {
 
             return responseSearchBlog;
         } catch (Exception e) {
+            log.error("blog serivce error", e);
+
             SearchBlogNaverResponseDto searchBlogNaverResponseDto = searchBlogNaverService.searchBlog(searchRequestDto);
 
             Pageable pageable = PageRequest.of(searchRequestDto.getPage(), searchRequestDto.getSize());
@@ -67,6 +74,10 @@ public class SearchBlogKaKaoService {
 
             return responseSearchBlog;
         }
+    }
+
+    private boolean isNotSuccess(HttpStatus statusCode) {
+        return !statusCode.is2xxSuccessful();
     }
 
     private HttpEntity<Void> getHeader() {
