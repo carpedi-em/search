@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 @Getter
@@ -14,6 +15,8 @@ public class SearchRequestDto {
     @NotEmpty
     private String query;
     private SearchSort sort;
+    @Min(1)
     private Integer page = 1;
+    @Min(1)
     private Integer size = 10;
 }

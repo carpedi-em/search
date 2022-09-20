@@ -69,19 +69,47 @@ class SearchApiTest {
     }
 
     @Test
-    @DisplayName("카카오 블로그 정렬 값 에러")
+    @DisplayName("카카오 블로그 잘못된 정렬 파라미터")
     void search_정렬_잘못된값() throws Exception {
         MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
         parameter.add("query", "kakaobank");
         parameter.add("sort", "abc");
-        parameter.add("page", "4");
-        parameter.add("size", "7");
 
         mvc.perform(MockMvcRequestBuilders
                         .get("/v2/search/blog")
                         .accept(MediaType.APPLICATION_JSON)
                         .params(parameter))
-                .andExpect(status().is5xxServerError())
+                .andExpect(status().is4xxClientError())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("카카오 블로그 잘못된 페이지 파라미터")
+    void search_페이지_잘못된값() throws Exception {
+        MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
+        parameter.add("query", "kakaobank");
+        parameter.add("page", "0");
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/v2/search/blog")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .params(parameter))
+                .andExpect(status().is4xxClientError())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("카카오 블로그 잘못된 사이즈 파라미터")
+    void search_사이즈_잘못된값() throws Exception {
+        MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
+        parameter.add("query", "kakaobank");
+        parameter.add("size", "0");
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/v2/search/blog")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .params(parameter))
+                .andExpect(status().is4xxClientError())
                 .andDo(print());
     }
 
